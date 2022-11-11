@@ -29,7 +29,8 @@ public class StudentService {
     public List<Student> getStudentAll() {
         System.out.println(studentRepository.findByName("nikitha"));
         System.out.println(studentRepository.findByNameEquals("nikitha"));
-        
+
+
         return studentRepository.findAll();
     }
 
