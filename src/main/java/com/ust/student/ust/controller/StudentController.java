@@ -1,6 +1,8 @@
 package com.ust.student.ust.controller;
 
+import com.ust.student.ust.DTO.StudentDTO;
 import com.ust.student.ust.entity.Student;
+import com.ust.student.ust.exception.InvalidEmailException;
 import com.ust.student.ust.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,12 +17,12 @@ public class StudentController {
     @Autowired
     StudentService studentService;
     @GetMapping("/student/{id}")
-    public ResponseEntity<Student>get(@PathVariable Integer id) {
+    public ResponseEntity<StudentDTO>get(@PathVariable Integer id) {
         try {
             Student student =studentService.getStudentByID(id);
-            return new ResponseEntity<Student>(student, HttpStatus.OK);
+            return new ResponseEntity<StudentDTO>(studentService.converttoDTO(student), HttpStatus.OK);
         }catch(NoSuchElementException e) {
-            return new ResponseEntity<Student>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<StudentDTO>(HttpStatus.NOT_FOUND);
         }
     }
     @GetMapping("/studentRequestParam")
@@ -42,10 +44,15 @@ public class StudentController {
         }
     }
     @PostMapping("/student")
-      public void add(@RequestBody Student student) {
-
+      public ResponseEntity<Student> add(@RequestBody Student student) {
+       try {
         studentService.saveStudent(student);
-    }
+           return new ResponseEntity<Student>(student, HttpStatus.OK);
+    } catch (InvalidEmailException e) {
+           return new ResponseEntity<Student>(HttpStatus.PRECONDITION_FAILED);
+       }
+
+       }
     @DeleteMapping("/student/{id}")
     public void delete(@PathVariable Integer id) {
         studentService.deleteStudent(id);

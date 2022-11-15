@@ -3,6 +3,7 @@ package com.ust.student.ust.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -21,6 +22,9 @@ public class Student {
     private int rollNo;
     private LocalDateTime creatDate;
     private LocalDateTime modifyDate;
+    @Column(name="email",unique=true)
+    private String email;
+    private String password;
 
 
     @OneToMany(cascade =CascadeType.ALL,fetch=FetchType.LAZY,mappedBy="student")
